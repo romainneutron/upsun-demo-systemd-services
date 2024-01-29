@@ -1,0 +1,42 @@
+applications:
+  upsun-demo-systemd-services:
+    source:
+      root: "/"
+
+    type: "php:8.2"
+
+    relationships:
+      influxdb: "influxdb:influxdb"
+
+    web:
+      locations:
+        "/":
+          passthru: "/index.php"
+          root: ""
+
+    hooks:
+      build: |
+        set -eux
+
+        TELEGRAF_VERSION=1.29.2
+        VECTOR_VERSION=0.35.0
+
+        wget -q https://dl.influxdata.com/telegraf/releases/telegraf-${TELEGRAF_VERSION}_linux_amd64.tar.gz
+        tar xf telegraf-${TELEGRAF_VERSION}_linux_amd64.tar.gz
+        mv telegraf-${TELEGRAF_VERSION} telegraf
+
+        wget https://packages.timber.io/vector/0.35.0/vector-${VECTOR_VERSION}-x86_64-unknown-linux-gnu.tar.gz
+        tar xf vector-${VECTOR_VERSION}-x86_64-unknown-linux-gnu.tar.gz
+        mv vector-x86_64-unknown-linux-gnu vector
+
+    build:
+      flavor: none
+
+services:
+  influxdb:
+    type: influxdb:2.3 # All available versions are: 2.3
+
+routes:
+  "https://{default}/":
+    type: upstream
+    upstream: "upsun-demo-systemd-services:http"

@@ -1,0 +1,5 @@
+#!/bin/bash
+export INFLUXDB_QUERY_JSON=$(echo $INFLUXDB_QUERY| tr "'" '"')
+export INFLUXDB_QUERY_ORG=$(echo $INFLUXDB_QUERY_JSON | jq -r .org)
+export INFLUXDB_QUERY_BUCKET=$(echo $INFLUXDB_QUERY_JSON | jq -r .bucket)
+export INFLUXDB_QUERY_API_TOKEN=$(echo $INFLUXDB_QUERY_JSON | jq -r .api_token)

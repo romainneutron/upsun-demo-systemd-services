@@ -1,0 +1,11 @@
+[Unit]
+Description=Telegraf
+[Service]
+Type=simple
+ExecStart=/app/scripts/run-telegraf.sh
+Restart=always
+TimeoutStartSec=60s
+TimeoutStopSec=10s
+
+[Install]
+WantedBy=default.target
